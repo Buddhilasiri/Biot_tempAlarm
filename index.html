@@ -3,14 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heatmap Visualization</title>
+  <title>IoT Heatmap Visualization</title>
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
-  <h1>Heatmap Visualization</h1>
-  <div id="heatmap"></div>
-  <div class="tooltip" style="display: none;"></div>
+  <div class="container">
+    <div class="header">
+      <h1>IoT Heatmap Visualization</h1>
+      <p class="subtitle">Real-time monitoring of temperature across sensors</p>
+      <label class="dark-mode-toggle">
+        <input type="checkbox" id="dark-mode-checkbox">
+        <span class="slider"></span>
+        <span class="label">Dark Mode</span>
+      </label>
+    </div>
+    <div class="content">
+      <div id="heatmap"></div>
+      <div id="color-chart">
+        <h3>Color Chart</h3>
+        <ul>
+          <!-- Chart will be dynamically populated -->
+        </ul>
+      </div>
+    </div>
+    <div class="tooltip" style="display: none;"></div>
+  </div>
   <script src="/js/script.js"></script>
 </body>
 </html>
