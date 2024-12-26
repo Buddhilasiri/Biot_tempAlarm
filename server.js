@@ -35,6 +35,7 @@ app.use(
 // Serve static files for the frontend
 app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/js", express.static(path.join(__dirname, "js")));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Serve the index.html
 app.get("/", (req, res) => {
