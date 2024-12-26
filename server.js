@@ -2,11 +2,19 @@ const express = require("express");
 const helmet = require("helmet");
 const mqtt = require("mqtt");
 const path = require("path");
+const admin = require("firebase-admin");
+
+// Initialize Firebase Admin SDK
+const serviceAccount = require("./firebaseServiceAccountKey.json"); // Replace with your Firebase service account key file
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+const db = admin.firestore();
 
 const app = express();
 const PORT = 3007;
 
-// CSP with helmet to allow external resources
+// Helmet for security and CSP
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -21,11 +29,11 @@ app.use(
   })
 );
 
-// Serve static files
+// Serve static files for the frontend
 app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/js", express.static(path.join(__dirname, "js")));
 
-// Serve index.html at root
+// Serve the index.html
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
   console.log("Served index.html");
@@ -48,11 +56,22 @@ mqttClient.on("connect", () => {
   });
 });
 
-mqttClient.on("message", (topic, message) => {
+mqttClient.on("message", async (topic, message) => {
   console.log(`Message received on topic ${topic}: ${message}`);
   try {
     const data = JSON.parse(message.toString());
+    const timestamp = new Date();
+
+    // Update sensor data for API
     sensorData[data.sensor] = parseFloat(data.temperature);
+
+    // Log to Firebase Firestore
+    await db.collection("sensorLogs").add({
+      sensor: data.sensor,
+      temperature: parseFloat(data.temperature),
+      timestamp: timestamp,
+    });
+    console.log(`Logged to Firebase: ${JSON.stringify(data)}`);
   } catch (err) {
     console.error("Error processing MQTT message:", err);
   }

@@ -19,7 +19,9 @@ darkModeCheckbox.addEventListener("change", () => {
 
 // Heatmap Logic
 const heatmapSize = { width: 300, height: 450 };
-const colors = d3.scaleSequential(d3.interpolateYlOrRd).domain([20, 50]);
+
+// Updated color scale: 20°C is blue, 200°C is dark red
+const colors = d3.scaleSequential(d3.interpolateRgb("blue", "darkred")).domain([20, 200]);
 
 const svg = d3
   .select("#heatmap")
@@ -69,7 +71,8 @@ function fetchSensorData() {
 function generateColorChart() {
   const chart = d3.select("#color-chart ul");
 
-  for (let i = 20; i <= 50; i += 5) {
+  // Dynamically create color chart from 20°C to 200°C
+  for (let i = 20; i <= 200; i += 20) {
     chart
       .append("li")
       .html(
