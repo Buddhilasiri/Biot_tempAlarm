@@ -4,8 +4,11 @@ const mqtt = require("mqtt");
 const path = require("path");
 const admin = require("firebase-admin");
 
+// Import Telegram Alerting
+const startTelegramAlerting = require("./telegramAlert");
+
 // Initialize Firebase Admin SDK
-const serviceAccount = require("./firebaseServiceAccountKey.json"); // Replace with your Firebase service account key file
+const serviceAccount = require("./firebaseServiceAccountKey.json"); // Firebase credentials
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -82,6 +85,9 @@ app.get("/api/sensors", (req, res) => {
   res.json(sensorData);
   console.log("Responded with sensor data:", sensorData);
 });
+
+// Start Telegram Alerting
+startTelegramAlerting();
 
 // Start the server
 app.listen(PORT, () => {
